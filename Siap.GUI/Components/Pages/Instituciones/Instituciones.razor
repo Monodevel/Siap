@@ -1,0 +1,63 @@
+﻿@page "/instituciones"
+@using Siap.Shared;
+@using Siap.GUI.Services;
+@using Siap.Shared.DTO
+
+@inject SweetAlertService sweet;
+@inject IInstitucionService institucionService;
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudTable Items="@listaInstituciones" Dense="true" Hover="true" Bordered="true" @bind-SelectedItem="elegido">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Instituciones</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>N°</MudTh>
+            <MudTh>Sigla</MudTh>
+            <MudTh>Nombre</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="N°">@(listaInstituciones.IndexOf(context)+1)</MudTd>
+            <MudTd DataLabel="Sigla">@context.Sigla</MudTd>
+            <MudTd DataLabel="Nombre">@context.Nombre</MudTd>
+            <MudTd>
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                    <MudIconButton Href="@GetInstitucionUrl(context.Id)" Icon="@Icons.Material.Filled.AccessAlarm"></MudIconButton>
+                </MudButtonGroup>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+@code {
+    private InstitucionDTO elegido = null;
+    List<InstitucionDTO>? listaInstituciones = null;
+    private string searchString = "";
+    private bool Filtrado(InstitucionDTO institucionDTO) => FilterFunc(institucionDTO, searchString);
+    private string GetInstitucionUrl(int id) => $"institucion/{id}";
+    private int counter = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaInstituciones = await institucionService.Lista();
+        counter = 1;
+    }
+
+    private bool FilterFunc(InstitucionDTO institucionDTO, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (institucionDTO.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (institucionDTO.Sigla.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+}

@@ -1,0 +1,74 @@
+﻿@page "/agregarDepartamento"
+
+@using Siap.GUI.Services
+@using Siap.Shared.DTO
+
+@inject SweetAlertService sweet;
+@inject IDireccionService direccionService;
+@inject IDepartamentoService departamentoService;
+@inject NavigationManager navegacion;
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudPaper Class="pa-4">
+                <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                    <MudTextField T="string" Label="Nombre" @bind-Value="departamentoDTO.Nombre" Required="true" RequiredError="El Nombre debe ser ingresado." />
+                    <MudTextField T="string" Label="Sigla" @bind-Value="departamentoDTO.Sigla" Required="true" RequiredError="La sigla debe ser ingresada." />
+                    <MudSelect T="int" Label="Direccion" @bind-Value="departamentoDTO.DireccionId" Text="Seleccione Opcion..." Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter">
+                        @if(listaDirecciones != null && listaDirecciones.Any())
+                        {
+                            @foreach(var direccion in listaDirecciones)
+                            {
+                                <MudSelectItem T="int" Value="@(direccion.Id)">@direccion.Nombre</MudSelectItem>
+                            }
+                        }
+                        else
+                        {
+                            <MudSelectItem Value="0" Disabled>No Existen Instituciones</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <div class="d-flex align-center justify-space-between">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="(() => guardarDepartamento())">Guardar</MudButton>
+                    </div>
+                </MudForm>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    List<DireccionDTO>? listaDirecciones = new List<DireccionDTO>();
+    DepartamentoDTO departamentoDTO = new DepartamentoDTO();
+    MudForm form;
+    bool success = true;
+    string[] errors = { };
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            listaDirecciones = await direccionService.Lista();
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task guardarDepartamento()
+    {
+        int idDevuelto = 0;
+        try
+        {
+            idDevuelto = await departamentoService.Guardar(departamentoDTO);
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        if(idDevuelto !=0)
+        {
+            await sweet.FireAsync("Guardado Correctamente");
+            navegacion.NavigateTo("/departamentos");
+        }
+    }
+}

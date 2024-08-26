@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siap.API", "Siap.API\Siap.API.csproj", "{706EE828-EFBF-4E85-A09F-0D7E1169C24C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siap.Shared", "Siap.Shared\Siap.Shared.csproj", "{F73CB636-0C8F-4556-8996-40E9138AC0AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siap.GUI", "Siap.GUI\Siap.GUI.csproj", "{6D693626-A594-44AC-A093-2FE72990CB8E}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{FD734693-9328-46DC-BBB3-0041A033C98C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{706EE828-EFBF-4E85-A09F-0D7E1169C24C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706EE828-EFBF-4E85-A09F-0D7E1169C24C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706EE828-EFBF-4E85-A09F-0D7E1169C24C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706EE828-EFBF-4E85-A09F-0D7E1169C24C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73CB636-0C8F-4556-8996-40E9138AC0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73CB636-0C8F-4556-8996-40E9138AC0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73CB636-0C8F-4556-8996-40E9138AC0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73CB636-0C8F-4556-8996-40E9138AC0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D693626-A594-44AC-A093-2FE72990CB8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D693626-A594-44AC-A093-2FE72990CB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D693626-A594-44AC-A093-2FE72990CB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D693626-A594-44AC-A093-2FE72990CB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD734693-9328-46DC-BBB3-0041A033C98C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD734693-9328-46DC-BBB3-0041A033C98C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD734693-9328-46DC-BBB3-0041A033C98C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD734693-9328-46DC-BBB3-0041A033C98C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {274092CA-78A7-42F2-9178-A4C4BA533770}
+	EndGlobalSection
+EndGlobal

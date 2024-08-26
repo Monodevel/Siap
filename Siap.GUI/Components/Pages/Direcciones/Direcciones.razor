@@ -1,0 +1,38 @@
+﻿@page "/direcciones"
+
+@using Siap.Shared.DTO;
+@using Siap.GUI.Services;
+
+@inject IDireccionService direccionService;
+
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudTable Items="@listaDirecciones" Dense="true" Hover="true" Bordered="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Direcciones</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>N°</MudTh>
+            <MudTh>Sigla</MudTh>
+            <MudTh>Nombre</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="N°">@(listaDirecciones.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Sigla">@context.Sigla</MudTd>
+            <MudTd DataLabel="Nombre">@context.Nombre</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+@code {
+    List<DireccionDTO>? listaDirecciones = null;
+    protected override async Task OnInitializedAsync()
+    {
+        listaDirecciones = await direccionService.Lista();
+    }
+
+}

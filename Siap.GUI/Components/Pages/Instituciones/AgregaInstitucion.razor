@@ -1,0 +1,48 @@
+﻿@page "/agregarInstitucion"
+
+@using Siap.GUI.Services;
+@using Siap.Shared.DTO
+
+@inject SweetAlertService sweet;
+@inject IInstitucionService institucionService;
+@inject NavigationManager navegacion;
+
+
+<h3>Agregar Institucion</h3>
+
+<EditForm Model="institucion" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mb-3">
+        <label class="form-label">Nombre Institucion</label>
+        <InputText class="form-control" @bind-Value="institucion.Nombre"></InputText>
+        <ValidationMessage For="@(()=> institucion.Nombre)"></ValidationMessage>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Sigla</label>
+        <InputText class="form-control" @bind-Value="institucion.Sigla"></InputText>
+        <ValidationMessage For="@(()=> institucion.Sigla)"></ValidationMessage>
+    </div>
+    <button class="btn btn-primary" type="submit">
+        @btnTexto
+    </button>
+
+    <a class="btn btn-warning" href="instituciones">volver</a>
+</EditForm>
+
+
+@code {
+    InstitucionDTO institucion = new InstitucionDTO();
+    string btnTexto = "Guardar";
+
+    private async Task OnValidSubmit()
+    {
+        int idDevuelto = 0;
+        idDevuelto = await institucionService.Guardar(institucion);
+        if(idDevuelto != 0)
+        {
+            await sweet.FireAsync("Guardado Correctamente");
+            navegacion.NavigateTo("/instituciones");
+        }
+    }
+}

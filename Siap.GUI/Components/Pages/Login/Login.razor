@@ -1,0 +1,38 @@
+﻿@page "/login"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Siap.GUI.Components.Layout
+@using Siap.Shared.DTO
+@using Siap.GUI.Authentication
+
+@inject ILoginService loginService
+@layout EmptyLayout
+@inject NavigationManager navegavion
+@inject AuthenticationStateProvider AuthStateProvider
+
+<EditForm Model="loginDTO" FormName="Login" OnValidSubmit="HandleLogin">
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <InputText id="username" class="form-control" @bind-Value="loginDTO.usuario"/>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" class="form-control" @bind-Value="loginDTO.password" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Ingresar</button>
+</EditForm>
+
+@code {
+    private LoginDTO loginDTO = new LoginDTO();
+
+    private async Task HandleLogin()
+    {
+        var res = await loginService.login(loginDTO);
+        if(res != null && res.Token != null)
+        {
+            await ((CustomAuthStateProvider)AuthStateProvider).MarkUserAsAuthenticated(res.Token);
+            navegavion.NavigateTo("/");
+        }
+    }
+}

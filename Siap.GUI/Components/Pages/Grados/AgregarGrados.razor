@@ -1,0 +1,133 @@
+﻿@page "/agregarGrados"
+
+@using Siap.GUI.Services;
+@using Siap.Shared.DTO;
+
+@inject SweetAlertService sweet;
+@inject IGradoService gradoService;
+@inject ICategoriaService categoriaService;
+@inject IInstitucionService institucionService;
+@inject NavigationManager navegacion;
+
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudPaper Class="pa-4">
+                <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                    <MudTextField T="string" Label="Nombre" @bind-Value="gradoDTO.Nombre" Required="true" RequiredError="El Nombre debe ser Ingresado" />
+                    <MudTextField T="string" Label="Sigla" @bind-Value="gradoDTO.Sigla" Required="true" RequiredError="la Sigla debe ser ingresada" />
+
+                    <MudSelect T="int" Label="Institucion" ValueChanged="SelectedValue" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter">
+                        @if (listaInstituciones != null && listaInstituciones.Any())
+                        {
+                            @foreach (var institucion in listaInstituciones)
+                            {
+                                <MudSelectItem T="int" Value="@(institucion.Id)">@institucion.Nombre</MudSelectItem>
+                            }
+                        }
+                        else
+                        {
+                            <MudSelectItem Value="0" Disabled>No Existen Instituciones</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="int" Label="Categoria" @bind-Value="gradoDTO.CategoriaId" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter">
+                        @if (listaCategorias != null && listaCategorias.Any())
+                        {
+                            @foreach (var categoria in listaCategorias)
+                            {
+                                <MudSelectItem T="int" Value="@(categoria.Id)">@categoria.Nombre</MudSelectItem>
+                            }
+                        }
+                        else
+                        {
+                            <MudSelectItem Value="0" Disabled>No Existen Categorias Registradas</MudSelectItem>
+                        }
+
+                    </MudSelect>
+
+                    <div class="d-flex align-center justify-space-between">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="(() => guardarGrado())">Guardar</MudButton>
+                    </div>
+                </MudForm>
+            </MudPaper>
+            <MudPaper Class="pa-4 mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(()=>form.Validate())">Validate</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(()=>form.ResetAsync())" Class="mx-2">Reset</MudButton>
+                <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+                <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+                @foreach (var error in errors)
+                {
+                    <MudText Color="@Color.Error">@error</MudText>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    List<InstitucionDTO>? listaInstituciones = new List<InstitucionDTO>();
+    List<CategoriaDTO>? listaCategorias = new List<CategoriaDTO>();
+    InstitucionDTO institucion = new InstitucionDTO();
+    CategoriaDTO categoriaDTO = new CategoriaDTO();
+    GradoDTO gradoDTO = new GradoDTO();
+    int idInstitucion = 0;
+    int idCategoria = 0;
+    MudForm form;
+    bool success = true;
+    string[] errors = { };
+    /**/
+
+    /**/
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            listaInstituciones = await institucionService.Lista();
+            listaCategorias = await categoriaService.Lista();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+
+    private async void SelectedValue(int selectedValue)
+    {
+        idInstitucion = selectedValue;
+        gradoDTO.InstitucionId = idInstitucion;
+        await actualizaCategoria(idInstitucion);
+        idCategoria = 0;
+
+    }
+
+    private async Task actualizaCategoria(int idInstitucion)
+    {
+        listaCategorias = await categoriaService.CategoriaInstitucion(idInstitucion);
+        StateHasChanged();
+    }
+
+    private async Task guardarGrado()
+    {
+        int idDevuelto = 0;
+        try
+        {
+            idDevuelto = await gradoService.Guardar(gradoDTO);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        if (idDevuelto != 0)
+        {
+            await sweet.FireAsync("Guardado Correctamente");
+            navegacion.NavigateTo("/grados");
+        }
+    }
+}

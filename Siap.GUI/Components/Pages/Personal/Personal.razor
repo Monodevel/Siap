@@ -1,0 +1,57 @@
+﻿@page "/personal"
+
+@using Siap.GUI.Services;
+@using Siap.Shared.DTO;
+
+@inject IPersonalService personalService;
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <h3>Gestion de Personal</h3>
+    <a href="agregarPersonal" class="btn btn-success">Agregar Personal</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Rut</th>
+                <th>Grado</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(listaPersonal == null)
+            {
+                <tr>
+                    <td colspan="6" align="center">No existen registros</td>
+                </tr>
+            }
+            else
+            {
+
+                @foreach(var item in listaPersonal)
+                {
+                    <tr>
+                        <td>NUM</td>
+                        <td>@item.Rut</td>
+                        <td>GRADO</td>
+                        <td>@item.ApellidoPaterno</td>
+                        <td>@item.ApellidoMaterno</td>
+                        <td>
+                            <a href="detallePersonal/@item.Id" class="btn btn-info"> Ver Detalles</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+</table>
+</MudContainer>
+
+
+    @code {
+    List<PersonalDTO>? listaPersonal = null;
+    protected override async Task OnInitializedAsync()
+    {
+        listaPersonal = await personalService.Lista();
+    }
+
+}

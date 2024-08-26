@@ -1,0 +1,65 @@
+﻿@page "/departamentos"
+
+@using Siap.Shared.DTO;
+
+@inject IDepartamentoService departamentoService;
+
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudTable Items="@listaDepartamentos" Breakpoint="Breakpoint.Sm" Dense="true" Hover="true" GroupBy="@_groupDefinition" Bordered="true" FixedHeader="true" @bind-SelectedItem="departamentoDTO" GroupHeaderStyle="background-color:var(--mud-palette-background-gray)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Departamentos</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <ColGroup>
+            @if (_groupDefinition.Expandable)
+            {
+                <col style="width: 60px;" />
+            }
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>N°</MudTh>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Sigla</MudTh>
+        </HeaderContent>
+        <GroupHeaderTemplate>
+            <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.GroupName}: {context.Key}")</MudTh>
+        </GroupHeaderTemplate>
+        <RowTemplate>
+            <MudTd DataLabel="N°">@(listaDepartamentos?.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Nombre">@context.Nombre</MudTd>
+            <MudTd DataLabel="Sigla">@context.Sigla</MudTd>
+
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] {50,100,150,200}" />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+</MudContainer>
+
+@code {
+    List<DepartamentoDTO>? listaDepartamentos = null;
+    DepartamentoDTO departamentoDTO = new DepartamentoDTO();
+    protected override async Task OnInitializedAsync()
+    {
+        listaDepartamentos = await departamentoService.Lista();
+    }
+
+    private TableGroupDefinition<DepartamentoDTO> _groupDefinition = new()
+        {
+            GroupName = "Direccion ",
+            Indentation = false,
+            Expandable = true,
+            IsInitiallyExpanded = false,
+            Selector = (e) => e.Direccion?.Nombre
+        };
+}

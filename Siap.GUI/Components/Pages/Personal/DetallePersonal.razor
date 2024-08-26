@@ -1,0 +1,113 @@
+﻿@page "/detallePersonal/{idPersonal:int}"
+
+@using Siap.Shared.DTO;
+@using Siap.GUI.Services;
+
+@inject IPersonalService personalService;
+@inject IPerfilProfesionalService perfilService;
+@inject NavigationManager navegacion;
+
+<MudContainer Class="mt-4">
+    <MudText Typo="Typo.h3">Detalles de Personal</MudText>
+    <MudGrid Class="p-2">
+        <MudItem sx="4">
+            <MudCard Class="mt-2">
+                <MudImage Src="images/logoEmco.png" Width="200" Height="200" Alt="Imagen de Usuario" Class="rounded-lg ma-4 mx-auto" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Align="Align.Center">
+                        @personal.ApellidoPaterno @personal.ApellidoMaterno @personal.Nombres
+                    </MudText>
+                    <MudText Typo="Typo.subtitle2" Align="Align.Center" Color="Color.Secondary">
+                        @perfilProfesional?.GradoDTO?.Nombre
+                    </MudText>
+                    <MudText Typo="Typo.h6" Align="Align.Center">
+                        @perfilProfesional?.Direccion?.Sigla
+                    </MudText>
+                    <MudChip T="string" OnClick="OnChipClicked" Color="Color.Default">Administrador</MudChip>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="8">
+            <MudCard Class="mt-2">
+                <MudCardContent>
+                    <MudSimpleTable Style="overflow-x: auto;">
+                        <thead>
+                            <tr>
+                                <th colspan="2">INFORMACION PERSONAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INSTITUCION: </td>
+                                <td>@perfilProfesional.Institucion?.Nombre</td>
+                            </tr>
+                            <tr>
+                                <td>GRADO: </td>
+                                <td>@perfilProfesional?.GradoDTO?.Nombre</td>
+                            </tr>
+                            <tr>
+                                <td>RUT: </td>
+                                <td>@personal.Rut</td>
+                            </tr>
+                            <tr>
+                                <td>APELLIDO PATERNO: </td>
+                                <td>@personal.ApellidoPaterno</td>
+                            </tr>
+                            <tr>
+                                <td>APELLIDO MATERNO: </td>
+                                <td>@personal.ApellidoMaterno</td>
+                            </tr>
+                            <tr>
+                                <td>NOMBRES: </td>
+                                <td>@personal.Nombres</td>
+                            </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+
+        <MudItem sx="12">
+            <MudTabs Elevation="2" Centered="true" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-12">
+                <MudTabPanel Text="Perfil Profesional">
+                    <MudText>Content One</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Licencias Medicas">
+                    <MudText>Content One</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Feriado Legal">
+                    <MudText>Content Two</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Permisos Especiales">
+                    <MudText>Content Three</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Comisiones">
+                    <MudText>Content Disabled</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Grupo familiar">
+                    <MudText>Content Disabled</MudText>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+
+</MudContainer>
+
+
+@code {
+    [Parameter]
+    public int idPersonal { get; set; } = 0;
+    PersonalDTO personal = new PersonalDTO();
+    PerfilProfesionalDTO perfilProfesional = new PerfilProfesionalDTO();
+    protected override async Task OnInitializedAsync()
+    {
+        personal = await personalService.Buscar(idPersonal);
+        perfilProfesional = await perfilService.BuscarPersonal(idPersonal);
+    }
+
+    public void OnChipClicked()
+    {
+
+    }
+}

@@ -1,0 +1,55 @@
+﻿@page "/categorias"
+@using Siap.Shared.DTO;
+@using Siap.GUI.Services;
+
+@inject SweetAlertService sweet;
+@inject ICategoriaService categoriaService;
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudTable Items="@listaCategorias" Dense="true" Hover="true" Bordered="true" @bind-SelectedItem="elegido">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Categorias</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>N°</MudTh>
+            <MudTh>Sigla</MudTh>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Institucion</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="N°">@(listaCategorias.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Sigla">@context.Sigla</MudTd>
+            <MudTd DataLabel="Nombre">@context.Nombre</MudTd>
+            <MudTd DataLabel="Institucion">@context.Institucion.Nombre</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+@code {
+
+    private CategoriaDTO elegido = null;
+    private string searchString = "";
+    private bool Filtrado(CategoriaDTO categoriaDTO) => FilterFunc(categoriaDTO, searchString);
+
+    private bool FilterFunc(CategoriaDTO categoriaDTO, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (categoriaDTO.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (categoriaDTO.Sigla.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+    List<CategoriaDTO>? listaCategorias = null;
+    protected override async Task OnInitializedAsync()
+    {
+        listaCategorias = await categoriaService.Lista();
+    }
+
+}

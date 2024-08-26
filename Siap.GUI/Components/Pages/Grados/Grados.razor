@@ -1,0 +1,76 @@
+﻿@page "/grados"
+
+@using Siap.Shared.DTO;
+
+@inject SweetAlertService sweet;
+@inject IGradoService gradoService;
+
+<style>
+    .mud-table-cell-custom-group {
+        font-weight:500;
+    }
+    .mud-table-cell-custom-group-footer{
+        padding-bottom:50px;
+        text-align: right;
+    }
+</style>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudTable Items="@listaGrados" Breakpoint="Breakpoint.Sm" Dense="true" Hover="true" GroupBy="@_groupDefinition" Bordered="true" FixedHeader="true" @bind-SelectedItem="gradoDTO" GroupHeaderStyle="background-color:var(--mud-palette-background-gray)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Grados</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <ColGroup>
+            @if(_groupDefinition.Expandable)
+            {
+                <col style="width: 60px;" />
+            }
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>N°</MudTh>
+            <MudTh>Categoria</MudTh>
+            <MudTh>Sigla</MudTh>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Institucion</MudTh>
+        </HeaderContent>
+        <GroupHeaderTemplate>
+            <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.GroupName}: {context.Key}")</MudTh>
+        </GroupHeaderTemplate>
+        <RowTemplate>
+            <MudTd DataLabel="N°">@(listaGrados?.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Institucion">@context.Categoria?.Nombre</MudTd>
+            <MudTd DataLabel="Sigla">@context.Sigla</MudTd>
+            <MudTd DataLabel="Nombre">@context.Nombre</MudTd>
+            <MudTd DataLabel="Institucion">@context.Institucion?.Nombre</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] {50,100,150,200}" />
+        </PagerContent>
+    </MudTable>
+</MudContainer>
+
+@code {
+    List<GradoDTO>? listaGrados = new List<GradoDTO>();
+    GradoDTO gradoDTO = new GradoDTO();
+    private string searchString = "";
+
+    private TableGroupDefinition<GradoDTO> _groupDefinition = new()
+        {
+            GroupName = "Institucion ",
+            Indentation = false,
+            Expandable = true,
+            IsInitiallyExpanded = false,
+            Selector = (e) => e.Institucion?.Nombre
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaGrados = await gradoService.Lista();
+    }
+
+}

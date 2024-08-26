@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  siap.api:
+    image: ${DOCKER_REGISTRY-}siapapi
+    build:
+      context: .
+      dockerfile: Siap.API/Dockerfile

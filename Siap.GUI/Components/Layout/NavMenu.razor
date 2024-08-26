@@ -1,0 +1,45 @@
+﻿<MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+    <MudNavMenu Class="mud-width-full">
+        <MudText Typo="Typo.subtitle1" Class="px-4">CAP. MARCO MIRANDA MORALES</MudText>
+        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">DIPRO</MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard">Inicio</MudNavLink>
+        <MudNavGroup Title="Administracion" Icon="@Icons.Material.Filled.Settings" Expanded="false">
+            <MudNavGroup Title="Instituciones" Icon="@Icons.Material.Filled.AccountTree" Expanded="false">
+                <MudNavLink Href="/instituciones" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarInstitucion" Icon="@Icons.Material.Filled.AddBox">Agregar Institucion</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Categorias" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                <MudNavLink Href="/categorias" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarCategoria" Icon="@Icons.Material.Filled.AddBox">Agregar Categoria</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Grados" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                <MudNavLink Href="/grados" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarGrados" Icon="@Icons.Material.Filled.AddBox">Agregar Grados</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Direcciones" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                <MudNavLink Href="/direcciones" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarGrados" Icon="@Icons.Material.Filled.AddBox">Agregar Categoria</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Departamentos" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                <MudNavLink Href="/departamentos" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarDepartamento" Icon="@Icons.Material.Filled.AddBox">Agregar Departamento</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Secciones" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                <MudNavLink Href="/grados" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarGrados" Icon="@Icons.Material.Filled.AddBox">Agregar Categoria</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Personal" Icon="@Icons.Material.Filled.SupervisedUserCircle" Expanded="false">
+                <MudNavLink Href="/personal" Icon="@Icons.Material.Filled.List">Listado</MudNavLink>
+                <MudNavLink Href="/agregarGrados" Icon="@Icons.Material.Filled.AddBox">Agregar Categoria</MudNavLink>
+                <MudNavGroup Title="Licencia Medica" Icon="@Icons.Material.Filled.AdminPanelSettings" Expanded="false">
+                    <MudNavLink Href="/grados" Icon="@Icons.Material.Filled.DeleteForever">Listado</MudNavLink>
+                    <MudNavLink Href="/agregarGrados" Icon="@Icons.Material.Filled.AddBox">Agregar Categoria</MudNavLink>
+                </MudNavGroup>
+            </MudNavGroup>
+        </MudNavGroup>
+        <MudNavLink Href="/billing" Icon="@Icons.Material.Filled.Receipt">Informacion Personal</MudNavLink>
+        <MudNavLink Href="/billing" Icon="@Icons.Material.Filled.Check">Parte Diario</MudNavLink>
+    </MudNavMenu>
+</MudPaper>
+
