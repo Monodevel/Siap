@@ -11,8 +11,8 @@ namespace Siap.API.Models
         [Required]
         public int IdHistorialToken { get; set; }
         public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public virtual Users Users { get; set; }
+        //[ForeignKey("UserId")]
+        //public virtual Users Users { get; set; }
         [Required]
         [MaxLength(500)]
         public string Token { get; set; }

@@ -77,7 +77,7 @@ namespace Siap.API.Services
 
         public async Task<AutorizacionResponse> DevolverToken(AutorizacionRequest autorizacion)
         {
-            var usuario_encontrado = _context.Users.FirstOrDefault(x=> x.Username == autorizacion.NombreUsuario && x.Password == autorizacion.Password);
+            var usuario_encontrado = _context.Users.FirstOrDefault(x=> x.UserName == autorizacion.NombreUsuario && x.PasswordHash == autorizacion.Password);
             if(usuario_encontrado == null)
             {
                 return await Task.FromResult<AutorizacionResponse>(null);

@@ -6,20 +6,29 @@ using Siap.GUI;
 using Siap.GUI.Authentication;
 using Siap.GUI.Components;
 using Siap.GUI.Services;
+using Siap.GUI.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5120") });
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CustomAuthStateProvider>();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddAuthorizationCore();
+
+
 //Servicios
 builder.Services.ModelosServices();
 builder.Services.AddMudServices();
 builder.Services.AddSweetAlert2();
 builder.Services.AddAuthentication();
 builder.Services.AddCascadingAuthenticationState();
+
 
 var app = builder.Build();
 

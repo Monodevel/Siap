@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Siap.API.Context;
 using Siap.API.Models;
@@ -12,10 +13,12 @@ namespace Siap.API.Controllers
     public class PersonalController : ControllerBase
     {
         private readonly SiapContext _context;
-
-        public PersonalController(SiapContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public PersonalController(SiapContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Personal
@@ -119,6 +122,10 @@ namespace Siap.API.Controllers
             {
                 try
                 {
+                    /*var user = new ApplicationUser { UserName = model.Rut, Email = model.Email, PersonalId = 0 };
+                        var result = await _userManager.CreateAsync(user, model.Password);*/
+
+                    /*-- Agrega el Usuario --*/
                     var dbPersonal = new Personal
                     {
                         Rut = personalDTO.Rut,
@@ -134,6 +141,7 @@ namespace Siap.API.Controllers
                     await _context.Personal.AddAsync(dbPersonal);
                     await _context.SaveChangesAsync();
 
+                    /*-- Perfil Profesional --*/
                     var perfilDB = new PerfilProfesional
                     {
                         PersonalId = dbPersonal.Id,
@@ -152,6 +160,7 @@ namespace Siap.API.Controllers
                     await _context.PerfilProfesionals.AddAsync(perfilDB);
                     await _context.SaveChangesAsync();
 
+                    /*-- Perfil de Contacto --*/
                     var perfilContactoDB = new PerfilContacto
                     {
                         PersonalId = dbPersonal.Id,
@@ -169,8 +178,14 @@ namespace Siap.API.Controllers
                         Modified = DateTime.Now
                     };
 
+
                     await _context.perfilContactos.AddAsync(perfilContactoDB);
+                    /*-- Agrega Datos de Ingreso --*/
+                    var user = new ApplicationUser { UserName = personalDTO.Rut, Email=personalDTO.ApellidoPaterno+"."+personalDTO.ApellidoMaterno+"@emco.mil.cl", PersonalId = personalDTO.Id };
+                    var result = await _userManager.CreateAsync(user, "Qwerty1234*");
+
                     await _context.SaveChangesAsync();
+
                     /* Una vez validados los cambios se ejecuta el commit */
 
                     await transaction.CommitAsync();

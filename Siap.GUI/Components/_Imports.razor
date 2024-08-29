@@ -10,5 +10,11 @@
 @using Siap.GUI.Services
 @using Siap.GUI.Components
 @using CurrieTechnologies.Razor.SweetAlert2 
+@using Siap.GUI.Services.Auth
 @using Siap.Shared.DTO
 @using MudBlazor
+
+@inject Siap.GUI.Authentication.CustomAuthStateProvider _stateProvider
+@inject AuthService _authService 
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService

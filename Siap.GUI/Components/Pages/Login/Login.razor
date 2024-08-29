@@ -1,38 +1,85 @@
 ﻿@page "/login"
 
-@using Microsoft.AspNetCore.Components.Authorization
 @using Siap.GUI.Components.Layout
+@using Siap.GUI.Services.Auth
 @using Siap.Shared.DTO
 @using Siap.GUI.Authentication
 
-@inject ILoginService loginService
+@inject AuthService authService;
 @layout EmptyLayout
 @inject NavigationManager navegavion
-@inject AuthenticationStateProvider AuthStateProvider
 
-<EditForm Model="loginDTO" FormName="Login" OnValidSubmit="HandleLogin">
+@if (!string.IsNullOrEmpty(ErrorMensaje))
+{
+    <div class="alert alert-danger">@ErrorMensaje</div>
+}
 
-    <div class="form-group">
-        <label for="username">Username</label>
-        <InputText id="username" class="form-control" @bind-Value="loginDTO.usuario"/>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <InputText id="password" class="form-control" @bind-Value="loginDTO.password" />
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Ingresar</button>
+
+<EditForm Model="@loginDTO" OnValidSubmit="HandleLogin">
+    <MudGrid>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudIcon Icon="@Icons.Material.Filled.Api" Color="Color.Primary" Size="Size.Large" ViewBox="0 0 500 500" Style="width: 100px; height: 100px;" />
+            </div>
+        </MudItem>
+        <DataAnnotationsValidator />
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudText Typo="Typo.h4">Ingresar</MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudText>Ingreso al Sistema </MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <div class="d-flex justify-center">
+                <MudText> <MudLink Href="/register">Registrar</MudLink></MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Label="Rut" Variant="Variant.Outlined"
+                          @bind-Value="loginDTO.Rut" For="@(() => loginDTO.Rut)" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="Contraseña" Variant="Variant.Outlined"
+                          @bind-Value="loginDTO.Password" For="@(() => loginDTO.Password)"
+                          InputType="InputType.Password" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.VisibilityOff" />
+        </MudItem>
+        <MudItem xs="12" Class="d-flex justify-space-between align-center">
+            <MudCheckBox T="bool" Label="Recordarme" Color="Color.Primary" Class="ml-n1"></MudCheckBox> <MudLink Href="/account/forgot-password">Olvido la Contraseña?</MudLink>
+        </MudItem>
+        <MudItem xs="12" Class="d-flex justify-center">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width: 100%;">Ingresar</MudButton>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton OnClick="DatosAdministrador">Llenar con datos de Administrador</MudButton>
+        </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
+    private string ErrorMensaje;
     private LoginDTO loginDTO = new LoginDTO();
 
     private async Task HandleLogin()
     {
-        var res = await loginService.login(loginDTO);
-        if(res != null && res.Token != null)
+        var res = await authService.Login(loginDTO);
+
+        if(res)
         {
-            await ((CustomAuthStateProvider)AuthStateProvider).MarkUserAsAuthenticated(res.Token);
             navegavion.NavigateTo("/");
         }
+        else
+        {
+
+        }
+    }
+
+    private void DatosAdministrador()
+    {
+        loginDTO.Rut = "17341434K";
+        loginDTO.Password = "M0n0-051021";
     }
 }

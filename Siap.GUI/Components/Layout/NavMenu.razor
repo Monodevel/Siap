@@ -1,7 +1,20 @@
-﻿<MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
     <MudNavMenu Class="mud-width-full">
-        <MudText Typo="Typo.subtitle1" Class="px-4">CAP. MARCO MIRANDA MORALES</MudText>
-        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">DIPRO</MudText>
+        @if (user != null)
+        {
+            <MudText Typo="Typo.subtitle1" Class="px-4">@user.Identity.Name</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@user</MudText>
+        }else
+        {
+            <MudText Typo="Typo.subtitle1" Class="px-4">Cargando...</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Cargando...</MudText>            
+        }
+
         <MudDivider Class="my-2" />
         <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard">Inicio</MudNavLink>
         <MudNavGroup Title="Administracion" Icon="@Icons.Material.Filled.Settings" Expanded="false">
@@ -43,3 +56,13 @@
     </MudNavMenu>
 </MudPaper>
 
+@code{
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+    }
+
+}

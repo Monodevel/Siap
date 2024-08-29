@@ -17,7 +17,7 @@ builder.Services.AddDbContext<SiapContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Siap-dev"))
     );
 
-builder.Services.AddIdentity<Users, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<SiapContext>();
 
@@ -52,12 +52,13 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(MyCors, policy => { policy.WithOrigins("http://localhost:5110", "http://localhost", "https://localhost:7157"); });
+    options.AddPolicy(MyCors, policy => { policy.WithOrigins("http://localhost:5110", "http://localhost", "https://localhost:7157","https://localhost"); });
 });
 
-builder.Services.AddScoped<IAutorizacionService, AutorizacionService>();
-var key = builder.Configuration.GetValue<string>("JwtSettings:key");
+//builder.Services.AddScoped<IAutorizacionService, AutorizacionService>();
+var key = builder.Configuration.GetValue<string>("Jwt:key");
 var keyBytes = Encoding.ASCII.GetBytes(key);
+
 
 builder.Services.AddAuthentication(config =>
 {

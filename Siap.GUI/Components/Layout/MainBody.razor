@@ -1,0 +1,77 @@
+﻿@using System.Security.Claims
+<MudAppBar Elevation="25">
+    <MudIcon Icon="@Icons.Material.Filled.Api" Size="Size.Large" ViewBox="0 0 500 500"/>
+    <MudText Typo="Typo.h6" Class="ml-4">Siap-EMCO</MudText>
+    <MudToolBar DisableGutters="true">
+        <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="((e)=>DrawerToggle())" Class="ml-3" />
+    </MudToolBar>
+    <MudSpacer/>
+    <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+        <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Secondary" Link="#" Target="_blank" StartIcon="@Icons.Material.Filled.LocalDrink">Ayuda @CurrentUserId - @PersonalId</MudButton>
+    </MudHidden>
+    <MudMenu Direction="_rightToLeft ? Direction.Right : Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
+        <ActivatorContent>
+           <MudAvatar Color="Color.Secondary"></MudAvatar>
+        </ActivatorContent>
+        <ChildContent>
+            <MudDivider Class="mb-2"/>
+            <MudList T="string">
+                <MudListItem Text="Perfil" Href="/account" Icon="@Icons.Material.Outlined.Person" />
+                <MudListItem Text="Salir"  Icon="@Icons.Material.Filled.Logout" OnClick="logout" />
+            </MudList>
+        </ChildContent>
+    </MudMenu>
+</MudAppBar>
+<MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="DrawerClipMode.Always">
+    <NavMenu/>
+</MudDrawer>
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+    </MudContainer>
+</MudMainContent>
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private bool _drawerOpen = true;
+    private string CurrentUserId;
+    private string PersonalId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadDataAsync();
+    }
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private async Task LoadDataAsync()
+    {
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+        if (user == null) return;
+        if(user.Identity?.IsAuthenticated == true)
+        {
+            if(string.IsNullOrEmpty(CurrentUserId))
+            {
+                CurrentUserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                //PersonalId = user.FindFirst(c => c.Type
+                
+            }
+        }
+    }
+
+    private void logout()
+    {
+        var parameters = new DialogParameters
+        {
+            {nameof(Dialogs.Logout.contentText),$"Confirmacion de Salida"},
+            {nameof(Dialogs.Logout.ButtonText),$"Salir"},
+            {nameof(Dialogs.Logout.Color), Color.Error},
+            {nameof(Dialogs.Logout.CurentUserId), CurrentUserId}
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        _dialogService.Show<Dialogs.Logout>("Salir", parameters, options);
+    }
+}
